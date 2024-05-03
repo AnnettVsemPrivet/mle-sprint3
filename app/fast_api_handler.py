@@ -16,7 +16,7 @@ class FastApiHandler:
             "model_params": dict
         }
 
-        self.model_path = "models/catboost_churn_model.bin"
+        self.model_path = "../models/catboost_churn_model.bin"
         self.load_churn_model(model_path=self.model_path)
         
         # Необходимые параметры для предсказаний модели оттока
@@ -122,7 +122,10 @@ class FastApiHandler:
                 user_id = params["user_id"]
                 print(f"Predicting for user_id: {user_id} and model_params:\n{model_params}")
                 # Получаем предсказания модели
-                probability = self.churn_predict(model_params)
+                try:
+                    probability = self.churn_predict(model_params)
+                except Exception as e:
+                    return {"Error": f"{e}"}
                 response = {
                     "user_id": user_id, 
                     "probability": probability, 
